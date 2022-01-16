@@ -1,0 +1,5 @@
+# Catch all other requests that don't match a file
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
