@@ -1,19 +1,97 @@
-import twitterLogo from './assets/twitter-logo.svg';
-import './App.css';
+import React, { useEffect, useState } from "react";
+import idl from "./idl.json";
+import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
+import { Program, Provider, web3 } from "@project-serum/anchor";
+import twitterLogo from "./assets/twitter-logo.svg";
+import {
+  checkIfWalletIsConnected,
+  renderNotConnectedContainer,
+  renderConnectedContainer,
+  getGifList,
+  createGifAccount,
+} from "./helper";
+import "./App.css";
 
 // Constants
-const TWITTER_HANDLE = '_buildspace';
+const TWITTER_HANDLE = "_wjbright";
 const TWITTER_LINK = `https://twitter.com/${TWITTER_HANDLE}`;
 
+// An app to drop vetted interns (vetted through  CVs, randomized interview questions, and coding challenges on a block chain)
+// Recruiters pay a small gas fee to hire an intern after reviewing their details
+
 const App = () => {
+  const [walletAddress, setWalletAddress] = useState(null);
+  const [inputValue, setInputValue] = useState("");
+  const [gifList, setGifList] = useState([]);
+
+  // System Program is a reference to the Solana runtime
+  const { SystemProgram, Keypair } = web3;
+
+  // create a keypair for the account that will hold our gifs
+  let baseAccount = Keypair.generate();
+
+  // get our program's id from the IDL file.
+  const programID = new PublicKey(idl.metadata.address);
+
+  // set our network to devnet.
+  const network = clusterApiUrl("devnet");
+
+  // control how we want to acknowledge when a transaction is "done"
+  const opts = {
+    preflightCommitment: "processed",
+  };
+
+  useEffect(() => {
+    const onLoad = async () => {
+      await checkIfWalletIsConnected(setWalletAddress);
+    };
+
+    window.addEventListener("load", onLoad);
+    return () => window.removeEventListener("load", onLoad);
+  }, []);
+
+  useEffect(() => {
+    if (walletAddress) {
+      console.log("Fetching GIF list...");
+      // Call Solana program here.
+      getGifList({
+        Program,
+        Connection,
+        Provider,
+        network,
+        opts,
+        idl,
+        programID,
+        baseAccount,
+        setGifList,
+      });
+    }
+  }, [walletAddress]);
+
   return (
     <div className="App">
-      <div className="container">
+      <div className={walletAddress ? "authed-container" : "container"}>
         <div className="header-container">
-          <p className="header">🖼 GIF Portal</p>
-          <p className="sub-text">
-            View your GIF collection in the metaverse ✨
-          </p>
+          <p className="header">🪞 Krak Portal</p>
+          <p className="sub-text">Rare minted pictures of Lord Krak 👽</p>
+          {!walletAddress && renderNotConnectedContainer(setWalletAddress)}
+          {walletAddress &&
+            renderConnectedContainer(
+              inputValue,
+              setInputValue,
+              gifList,
+              setGifList,
+              Program,
+              Connection,
+              Provider,
+              SystemProgram,
+              network,
+              opts,
+              idl,
+              programID,
+              baseAccount,
+              setGifList
+            )}
         </div>
         <div className="footer-container">
           <img alt="Twitter Logo" className="twitter-logo" src={twitterLogo} />
@@ -22,7 +100,7 @@ const App = () => {
             href={TWITTER_LINK}
             target="_blank"
             rel="noreferrer"
-          >{`built on @${TWITTER_HANDLE}`}</a>
+          >{`built by @${TWITTER_HANDLE}`}</a>
         </div>
       </div>
     </div>

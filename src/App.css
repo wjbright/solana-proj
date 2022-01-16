@@ -46,7 +46,7 @@
   padding-left: 40px;
   padding-right: 40px;
   border-radius: 10px;
-  cursor: pointer;
+  cursor: pointer !important;
   font-size: 16px;
   font-weight: bold;
   color: white;
@@ -55,6 +55,11 @@
 .connect-wallet-button {
   background: -webkit-linear-gradient(left, #60c657, #35aee2);
   background-size: 200% 200%;
+  animation: gradient-animation 4s ease infinite;
+}
+
+.connect-wallet-button:hover {
+  background: -webkit-linear-gradient(left, #35aee2, #60c657);
   animation: gradient-animation 4s ease infinite;
 }
 
