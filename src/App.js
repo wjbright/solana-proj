@@ -9,7 +9,6 @@ import {
   renderNotConnectedContainer,
   renderConnectedContainer,
   getGifList,
-  createGifAccount,
 } from "./helper";
 import "./App.css";
 
@@ -26,6 +25,7 @@ const App = () => {
   const [gifList, setGifList] = useState([]);
 
   // System Program is a reference to the Solana runtime
+  // eslint-disable-next-line no-unused-vars
   const { SystemProgram, Keypair } = web3;
 
   // create a keypair for the account that will hold our gifs
@@ -69,6 +69,7 @@ const App = () => {
         setGifList,
       });
     }
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [walletAddress]);
 
   return (

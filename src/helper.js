@@ -1,3 +1,4 @@
+// eslint-disable-next-line no-unused-vars
 const TEST_GIFS = [
   "https://media.giphy.com/media/dyjrpqaUVqCELGuQVr/giphy.gif",
   "https://media.giphy.com/media/QexWWszyJE1CG3MSqq/giphy.gif",
