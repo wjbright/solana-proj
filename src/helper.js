@@ -258,7 +258,7 @@ const renderConnectedContainer = (
         <div className="gif-grid">
           {gifs.map((gif, index) => (
             <div className="gif-item" key={index}>
-              <img src={gif} alt={gif} />
+              <img src={gif.gifLink} alt={gif.gifLink} />
             </div>
           ))}
         </div>

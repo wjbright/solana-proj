@@ -1,7 +1,8 @@
 import React, { useEffect, useState } from "react";
-import idl from "./idl.json";
 import { Connection, PublicKey, clusterApiUrl } from "@solana/web3.js";
 import { Program, Provider, web3 } from "@project-serum/anchor";
+import idl from "./idl.json";
+import kp from "./keypair.json";
 import twitterLogo from "./assets/twitter-logo.svg";
 import {
   checkIfWalletIsConnected,
@@ -28,7 +29,9 @@ const App = () => {
   const { SystemProgram, Keypair } = web3;
 
   // create a keypair for the account that will hold our gifs
-  let baseAccount = Keypair.generate();
+  const arr = Object.values(kp._keypair.secretKey);
+  const secret = new Uint8Array(arr);
+  const baseAccount = web3.Keypair.fromSecretKey(secret);
 
   // get our program's id from the IDL file.
   const programID = new PublicKey(idl.metadata.address);
